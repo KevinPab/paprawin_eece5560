@@ -5,8 +5,8 @@ from std_msgs.msg import Float32
 
 class Homework1:
     def __init__(self):
-        rospy.Subscriber("delta", Float32, self.callback)
-        self.pub = rospy.Publisher("total", Float32, queue_size=10)
+        rospy.Subscriber("/homework1/delta", Float32, self.callback)
+        self.pub = rospy.Publisher("/homework1/total", Float32, queue_size=10)
         self.total = 0
 
     def callback(self, data):
