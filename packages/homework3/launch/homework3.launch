@@ -7,7 +7,7 @@
   </group>
 
   <group ns="homework3">
-    <param name="units" type="str" value="meters"/>
+    <param name="units" type="str" value="smoots"/>
     <node pkg="homework3" name="homework3" type="homework3.py"/>
   </group>
 
