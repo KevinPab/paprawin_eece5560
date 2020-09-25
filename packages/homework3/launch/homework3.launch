@@ -1,0 +1,20 @@
+<launch>
+
+  
+
+  <group ns="homework1">
+    <node pkg="homework1" name="homework1" type="homework1.py"/>
+  </group>
+
+  <group ns="homework3">
+    <param name="units" type="str" value="meters"/>
+    <node pkg="homework3" name="homework3" type="homework3.py"/>
+  </group>
+
+  <group ns="homework2">
+    <node pkg="homework2" name="talker" type="talker.py"/>
+      <remap from="/homework1/total" to="/homework3/converted_total"/>
+    <node pkg="homework2" name="listener" type="listener.py"/>
+  </group>
+
+</launch>
