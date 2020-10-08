@@ -1,7 +1,7 @@
 # parameters
 ARG REPO_NAME="paprawin_eece5560"
-ARG DESCRIPTION="paprawin's repo for UML EECE 5560"
-ARG MAINTAINER="Paprawin Boonyakida (paprawin@hotmail.com)"
+ARG DESCRIPTION="paprawin's class repo for UML EECE 5560"
+ARG MAINTAINER="Paprawin Boonyakida (paprawin_boonyakida@student.uml.edu)"
 # pick an icon from: https://fontawesome.com/v4.7.0/icons/
 ARG ICON="cube"
 
@@ -10,11 +10,11 @@ ARG ICON="cube"
 ARG ARCH=arm32v7
 ARG DISTRO=daffy
 ARG BASE_TAG=${DISTRO}-${ARCH}
-ARG BASE_IMAGE=dt-ros-commons
+ARG BASE_IMAGE=dt-core
 ARG LAUNCHER=default
 
 # define base image
-FROM duckietown/${BASE_IMAGE}:${BASE_TAG}
+FROM duckietown/${BASE_IMAGE}:${BASE_TAG} as BASE
 
 # recall all arguments
 ARG ARCH
@@ -31,6 +31,7 @@ ARG LAUNCHER
 RUN dt-build-env-check "${REPO_NAME}" "${MAINTAINER}" "${DESCRIPTION}"
 
 # define/create repository path
+ARG COURSE_PATH="${CATKIN_WS_DIR}/src/eece5560"
 ARG REPO_PATH="${CATKIN_WS_DIR}/src/${REPO_NAME}"
 ARG LAUNCH_PATH="${LAUNCH_DIR}/${REPO_NAME}"
 RUN mkdir -p "${REPO_PATH}"
@@ -52,10 +53,11 @@ RUN dt-apt-install ${REPO_PATH}/dependencies-apt.txt
 
 # install python3 dependencies
 COPY ./dependencies-py3.txt "${REPO_PATH}/"
-RUN pip3 install -r ${REPO_PATH}/dependencies-py3.txt
+RUN pip3 install --use-feature=2020-resolver -r ${REPO_PATH}/dependencies-py3.txt
 
 # copy the source code
-COPY ./packages "${REPO_PATH}/packages"
+#COPY ./packages "${REPO_PATH}/packages"
+#COPY ./eece5560/. "${COURSE_PATH}"
 
 # build packages
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
