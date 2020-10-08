@@ -1,0 +1,18 @@
+<launch>
+
+  
+
+  <group ns="homework1">
+    <node pkg="homework1" name="homework1" type="homework1.py"/>
+  </group>
+
+  <group ns="homework4">
+    <param name="units" type="str" value="smoots"/>
+    <node pkg="homework4" name="homework4" type="homework4_node.py"/>
+  </group>
+
+  <group ns="homework2">
+    <node pkg="homework2" name="talker" type="talker.py"/>
+  </group>
+
+</launch>
