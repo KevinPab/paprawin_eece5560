@@ -1,9 +1,15 @@
 <launch>
 
-  <node pkg="example_service" name="fibonacci_service" type="example_service_node.py"/>
+  <group ns="example_services">
+    <node pkg="example_service" name="fibonacci_service" type="example_service_node.py"/>
+  </group>
+  
+  <group ns="example_action_server">
+    <node pkg="example_action_server" name="fibonacci" type="example_action_server_node.py"/>
+  </group>
 
   <group ns="homework4">
-    <node pkg="homework4" name="homework4_pt2" type="hw4_client.py"/>
+    <node pkg="homework4" name="hw4_client" type="hw4_client.py"/>
   </group>
 
 
