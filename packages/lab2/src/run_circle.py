@@ -21,9 +21,9 @@ if __name__ == '__main__':
     try:
         run_c = Run_Circle()
         rospy.init_node('run_circle_node', anonymous=True)
-        rate = rospy.Rate(1)
+        rate = rospy.Rate(10)
         while not rospy.is_shutdown():
-            run_c.send_motor_msg(0.4, 2.3) # edit velocity and omega values here
+            run_c.send_motor_msg(0.17, 1.55) # edit velocity and omega values here
             rate.sleep()
     except rospy.ROSInterruptException:
             pass
