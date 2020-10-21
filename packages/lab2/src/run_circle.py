@@ -8,7 +8,7 @@ class Run_Circle:
     def __init__(self):
 
         # publishes to the output of carm_cmd_switch_node 
-        self.pub = rospy.Publisher("/car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
+        self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
         my_msg = Twist2DStamped() # initialized the message
     
     # sends the velocity and angular message to the 
