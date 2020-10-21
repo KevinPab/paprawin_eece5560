@@ -1,0 +1,5 @@
+<launch>
+  <group ns="$(env umassduck)">
+    <node pkg="lab2" name="lab2_part1" type="run_circle.py"/>
+  </group>
+</launch>
