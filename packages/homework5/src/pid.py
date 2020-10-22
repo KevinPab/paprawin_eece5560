@@ -15,14 +15,14 @@ class PID:
         self.ki = i
         self.kd = d
 
-    # calculate control signal. Returns control signal message
-    def calc_control(self, error, time):
-        # Todo: update p,i,d using error val
-        # add p + i + d and return the result
-        self.kp = self.kp * error
-        self.ki = self.ki + (error * time) 
-        self.kd = 
-        result = self.kp + self.ki + self.kd
+    # Receives (error value, delta time). Returns updated control signal value
+    def calc_control(self, error, dt):
+
+        # Todo: update p,i,d using error val and return the result
+        p = error
+        i = self.ki + (error * dt)
+        d = (error - self.kd) / dt
+        result = (self.kp*p) + (self.ki * i) + (self.kd * d)
         return result
         
 
