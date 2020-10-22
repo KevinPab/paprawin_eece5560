@@ -7,7 +7,7 @@ from duckietown_msgs.msg import Twist2DStamped
 class Run_Circle:
     def __init__(self):
 
-        # publishes to the output of carm_cmd_switch_node 
+        # publishes to the output of car_cmd_switch_node 
         self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
         self.my_msg = Twist2DStamped() # initialized the message
     
@@ -21,10 +21,12 @@ if __name__ == '__main__':
     try:
         run_c = Run_Circle()
         rospy.init_node('run_circle_node', anonymous=True)
-        rate = rospy.Rate(10)
-        while not rospy.is_shutdown():
-            run_c.send_motor_msg(0.17, 1.55) # edit velocity and omega values here
-            rate.sleep()
+        time_allowed = 10 # edit total running time here
+        for i in range(time_allowed):
+            run_c.send_motor_msg(0.34, 2.409) # edit velocity and omega values here
+            rospy.sleep(1.09)
+        run_c.send_motor_msg(0, 0) # stops all motors
+        rospy.sleep(1)
     except rospy.ROSInterruptException:
             pass
 
