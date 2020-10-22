@@ -22,10 +22,10 @@ if __name__ == '__main__':
         run_sq = Run_Square()
         rospy.init_node('run_square_node', anonymous=True)
 
-        time_straight = 2.8 # edit straight driving time here
-        time_spin = 0.84 # edit body rotating time here
-        run_vel = 0.415 # velocity of straight drive
-        spin_omega = 4 # angular velocity used for spinning (negative spins clockwise)
+        time_straight = 2.9 # edit straight driving time here
+        time_spin = 0.9 # edit body rotating time here
+        run_vel = 0.44 # velocity of straight drive
+        spin_omega = 5.5 # angular velocity used for spinning (negative spins clockwise)
 
         # drive straight for n seconds, then turn. Repeat 4 times
         for i in range(4):
