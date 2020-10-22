@@ -48,9 +48,15 @@ if __name__ == '__main__':
         while not rospy.is_shutdown():
             if rospy.has_param("controller_ready"):
                 if rospy.get_param("controller_ready") != "true":
+                    rospy.logwarn("Waiting for controller_ready to be true")
                     rate.sleep()
                     start_time = rospy.get_time()
-                    break
+                    continue
+            else:
+                rospy.logwarn("Waiting for controller_ready to be true")
+                rate.sleep()
+                start_time = rospy.get_time()
+                continue
             time_elapsed = rospy.get_time() - start_time
             # quit after 30 sec of running
             if time_elapsed > 30:
