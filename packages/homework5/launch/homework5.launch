@@ -1,12 +1,8 @@
 <launch>
 
-  <group ns="vehicle">
-      <node pkg="controls_hw" name="vehicle_dynamics" type="vehicle_dynamics.py"/>
-  </group>
+  <node pkg="controls_hw" name="vehicle_dynamics" type="vehicle_dynamics.py"/>
 
-  <group ns="homework5">
-    <param name="controller_ready" type="boolean" value="false"/>
-    <node pkg="homework5" name="homework5" type="homework5.py"/>
-  </group>
+  <param name="/controller_ready" type="str" value="false"/>
+  <node pkg="homework5" name="homework5" type="homework5.py"/>
 
 </launch>
