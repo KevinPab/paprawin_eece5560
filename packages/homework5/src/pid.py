@@ -22,6 +22,7 @@ class PID:
         # Todo: update p,i,d using error val and return the result
         p = error
         i = self.ki + (error * dt)
+	self.ki += i;
         d = (error - self.prev_err) / dt
         self.prev_err = error
         result = (self.kp*p) + (self.ki * i) + (self.kd * d)
