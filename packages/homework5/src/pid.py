@@ -9,6 +9,7 @@ class PID:
         self.ki = i
         self.kd = d
         self.prev_err = 0
+        self.inte = 0
     
     # change gains
     def change_gains(self, p, i, d):
@@ -21,10 +22,10 @@ class PID:
 
         # Todo: update p,i,d using error val and return the result
         p = error
-        i = self.ki + (error * dt)
+        self.inte = self.inte + (error * dt)
         d = (error - self.prev_err) / dt
         self.prev_err = error
-        result = (self.kp*p) + (self.ki * i) + (self.kd * d)
+        result = (self.kp*p) + (self.ki * self.inte) + (self.kd * d)
         return result
         
 

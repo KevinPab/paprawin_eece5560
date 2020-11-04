@@ -12,7 +12,7 @@ class Homework5:
         self.pid_obj = PID(p=0.03, i=0.01, d=0.317)
 
         # set param controller_ready to true
-        rospy.set_param("/controller_ready", "true") 
+        rospy.set_param("controller_ready", "true") 
 
         # receives/responds-to messages from error topic published by vehicle_dynamics.py
         rospy.Subscriber("/error", Float32, self.callback)
