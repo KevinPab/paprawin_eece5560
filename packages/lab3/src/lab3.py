@@ -5,8 +5,6 @@ from std_msgs.msg import Float32, String
 from duckietown_msgs.msg import LanePose, Twist2DStamped, FSMState
 from pid import PID
 
-velocity = 0.23
-
 class Lab3:
     def __init__(self):
 
@@ -14,10 +12,11 @@ class Lab3:
         self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
 
         # tune pid values below
-        self.pid_1 = PID(p=2, i=0, d=0)
-        self.pid_2 = PID(p=0.1, i=0, d=0)
+        self.pid_1 = PID(p= -6.0, i= -0.3, d=0)
+        self.pid_2 = PID(p=0, i=0, d=0)
         self.my_msg = Twist2DStamped()
         self.allow_follow = False
+        self.velocity = 0.27  # adjust velocity here
 
         # receive the phi and d to update PID controller and movement
         rospy.Subscriber("lane_filter_node/lane_pose", LanePose, self.follow_lane)
@@ -34,7 +33,7 @@ class Lab3:
         if (self.allow_follow == True):
             rospy.logwarn("PAPRAWIN LANE FOLLOWING Code")
 
-            self.my_msg.v = velocity
+            self.my_msg.v = self.velocity
 
             # use first PID controller on d
             omega_1 = self.pid_1.calc_control(pose.d, 0.001)
