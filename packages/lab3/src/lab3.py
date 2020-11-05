@@ -12,10 +12,10 @@ class Lab3:
         self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
 
         # tune pid values below
-        self.pid_1 = PID(p=0, i=0, d=0)
+        self.pid_1 = PID(p=1, i=0, d=0)
         self.pid_2 = PID(p=0, i=0, d=0)
         self.my_msg = Twist2DStamped()
-        self.my_msg.v = 0.15 # velocity
+        self.my_msg.v = 0.23 # velocity
 
         # receive the phi and d to update PID controller and movement
         rospy.Subscriber("lane_filter_node/lane_pose", LanePose, self.get_new_update)
@@ -49,7 +49,6 @@ if __name__ == '__main__':
 
     rospy.init_node('lab3_node')
     # sleep allows user to run rqt_plot
-    rospy.sleep(5)
     Lab3()
 
     # spin() simply keeps python from exiting until this node is stopped
