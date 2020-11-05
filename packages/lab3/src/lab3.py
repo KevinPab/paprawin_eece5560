@@ -13,6 +13,7 @@ class Homework5:
         self.pid_1 = PID(p=0.03, i=0.01, d=0)
         self.pid_2 = PID(p=0.03, i=0.01, d=0)
         self.my_msg = Twist2DStamped()
+        self.my_msg.v = 20 # velocity
 
         # receive the phi and d from lane_pose
         rospy.Subscriber("lane_filter_node/lane_pose", LanePose, self.callback)
