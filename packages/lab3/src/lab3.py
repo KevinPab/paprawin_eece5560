@@ -5,7 +5,6 @@ from std_msgs.msg import Float32, String
 from duckietown_msgs.msg import LanePose, Twist2DStamped, FSMState
 from pid import PID
 
-allow_follow = False
 velocity = 0.23
 
 class Lab3:
@@ -18,6 +17,7 @@ class Lab3:
         self.pid_1 = PID(p=2, i=0, d=0)
         self.pid_2 = PID(p=0.1, i=0, d=0)
         self.my_msg = Twist2DStamped()
+        self.allow_follow = False
 
         # receive the phi and d to update PID controller and movement
         rospy.Subscriber("lane_filter_node/lane_pose", LanePose, self.follow_lane)
@@ -28,10 +28,10 @@ class Lab3:
 
     # call PID class control calculation when receiving error message
     def follow_lane(self, pose):
-        rospy.logwarn(allow_follow)
+        rospy.logwarn(self.allow_follow)
 
         # if joystick key "a" is pressed, run lane follow
-        if (allow_follow):
+        if (self.allow_follow == True):
             rospy.logwarn("PAPRAWIN LANE FOLLOWING Code")
 
             self.my_msg.v = velocity
@@ -57,9 +57,11 @@ class Lab3:
 
     def callbackFSM(self, keypressed):
         if (keypressed.state == "LANE_FOLLOWING"):
-            allow_follow = True # program will run once "a" is pressed
+            self.allow_follow = True # program will run once "a" is pressed
+            rospy.logwarn(self.allow_follow)
+
         elif (keypressed.state == "NORMAL_JOYSTICK_CONTROL"):
-            allow_follow = False # disable lane following program
+            self.allow_follow = False # disable lane following program
 
 
 
