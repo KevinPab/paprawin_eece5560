@@ -12,8 +12,8 @@ class Lab3:
         self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
 
         # tune pid values below
-        self.pid_1 = PID(p= -6, i= -0.1, d=0)
-        self.pid_2 = PID(p= -6, i= -0, d=0)
+        self.pid_1 = PID(p= -6.5, i= -0.15, d=0)
+        self.pid_2 = PID(p= -5, i= -0, d=0)
         self.my_msg = Twist2DStamped()
         self.allow_follow = False
         self.velocity = 0.2  # adjust velocity here
@@ -25,7 +25,7 @@ class Lab3:
         rospy.Subscriber("fsm_node/mode", FSMState, self.callbackFSM)
 
 
-    # call PID class control calculation when receiving error message
+    # use the pose (d and phi) to calculate omega 
     def follow_lane(self, pose):
 
         # if joystick key "a" is pressed, run lane follow
