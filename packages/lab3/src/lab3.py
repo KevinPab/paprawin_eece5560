@@ -8,12 +8,13 @@ from pid import PID
 class Lab3:
     def __init__(self):
 
-        # homework 5 publishes to the control input for vehicle_dynamics to read
+        # publish to cmd
         self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
 
         # tune pid values below
-        self.pid_1 = PID(p= -7.3, i= -0., d=0)
-        self.pid_2 = PID(p= -5.5, i= -0, d=0)
+        self.pid_1 = PID(p= -6.5, i= 0, d=0)
+        self.pid_2 = PID(p= -5, i= 0 , d=0)
+
         self.my_msg = Twist2DStamped()
         self.allow_follow = False
         self.velocity = 0.2  # adjust velocity here
@@ -29,8 +30,9 @@ class Lab3:
     def follow_lane(self, pose):
 
         # if joystick key "a" is pressed, run lane follow
-        if (self.allow_follow == True):
+        if (self.allow_follow):
             rospy.logwarn("PAPRAWIN LANE FOLLOWING Code")
+            rospy.logwarn("d received = %f", pose.d)
 
             self.my_msg.v = self.velocity
 
@@ -46,7 +48,7 @@ class Lab3:
             # sends new controller message to system 
             self.pub.publish(self.my_msg)
 
-        # else will stop running
+        # else it will stop running
         else:
             self.my_msg.v = 0
             self.my_msg.omega = 0
@@ -57,14 +59,13 @@ class Lab3:
             self.allow_follow = True # program will run once "a" is pressed
 
         elif (keypressed.state == "NORMAL_JOYSTICK_CONTROL"):
-            self.allow_follow = False # disable lane following program
+            self.allow_follow = False # disable lane following program when "s" is pressed
 
 
 
 if __name__ == '__main__':
 
     rospy.init_node('lab3_node')
-    # sleep allows user to run rqt_plot
     Lab3()
 
     # spin() simply keeps python from exiting until this node is stopped
