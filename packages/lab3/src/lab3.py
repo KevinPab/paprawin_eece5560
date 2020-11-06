@@ -16,8 +16,8 @@ class Lab3:
         self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
 
         # tune pid values below. omega should have opposite sign from d -> use negative p,i
-        self.pid_1 = PID(p= -7, i= -0.01, d=0)
-        self.pid_2 = PID(p= -7, i= 0 , d=0)
+        self.pid_1 = PID(p= -7.5, i= 0, d=0)
+        self.pid_2 = PID(p= -5.4, i= -0.1 , d=0)
 
         self.my_msg = Twist2DStamped()
         self.allow_follow = False
@@ -57,6 +57,7 @@ class Lab3:
             self.my_msg.omega = 0
             self.pub.publish(self.my_msg)
 
+    # Determine which key was pressed by user
     def callbackFSM(self, keypressed):
         if (keypressed.state == "LANE_FOLLOWING"):
             self.allow_follow = True # program will run once "a" is pressed
