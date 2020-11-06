@@ -12,8 +12,8 @@ class Lab3:
         self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
 
         # tune pid values below
-        self.pid_1 = PID(p= -6.5, i= -0.15, d=0)
-        self.pid_2 = PID(p= -5, i= -0, d=0)
+        self.pid_1 = PID(p= -7.3, i= -0., d=0)
+        self.pid_2 = PID(p= -5.5, i= -0, d=0)
         self.my_msg = Twist2DStamped()
         self.allow_follow = False
         self.velocity = 0.2  # adjust velocity here
@@ -35,10 +35,10 @@ class Lab3:
             self.my_msg.v = self.velocity
 
             # use first PID controller on d
-            omega_1 = self.pid_1.calc_control(pose.d, 0.002)
+            omega_1 = self.pid_1.calc_control(pose.d, 0.0015)
 
             # use second PID controller on phi
-            omega_2 = self.pid_2.calc_control(pose.phi, 0.002)
+            omega_2 = self.pid_2.calc_control(pose.phi, 0.0015)
 
             # add up omega values
             self.my_msg.omega = omega_1 + omega_2
