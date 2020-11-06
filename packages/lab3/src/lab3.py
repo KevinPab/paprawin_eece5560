@@ -5,15 +5,19 @@ from std_msgs.msg import Float32, String
 from duckietown_msgs.msg import LanePose, Twist2DStamped, FSMState
 from pid import PID
 
+# Note: d is positive when too close to left lane -> needs omega to be negative for right steer
+#	d is negative when too close to right -> needs omega to be positive for left steer
+#	Therefore, omega must be opposite sign from d
+
 class Lab3:
     def __init__(self):
 
         # publish to cmd
         self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
 
-        # tune pid values below
-        self.pid_1 = PID(p= -6.5, i= 0, d=0)
-        self.pid_2 = PID(p= -5, i= 0 , d=0)
+        # tune pid values below. omega should have opposite sign from d -> use negative p,i
+        self.pid_1 = PID(p= -7, i= -0.01, d=0)
+        self.pid_2 = PID(p= -7, i= 0 , d=0)
 
         self.my_msg = Twist2DStamped()
         self.allow_follow = False
@@ -31,8 +35,7 @@ class Lab3:
 
         # if joystick key "a" is pressed, run lane follow
         if (self.allow_follow):
-            rospy.logwarn("PAPRAWIN LANE FOLLOWING Code")
-            rospy.logwarn("d received = %f", pose.d)
+            rospy.logwarn("Paprawin B. Lab3: LANE FOLLOWING Code Running")
 
             self.my_msg.v = self.velocity
 
