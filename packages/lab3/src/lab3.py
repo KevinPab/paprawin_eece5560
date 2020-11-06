@@ -12,11 +12,11 @@ class Lab3:
         self.pub = rospy.Publisher("car_cmd_switch_node/cmd", Twist2DStamped, queue_size=10)
 
         # tune pid values below
-        self.pid_1 = PID(p= -6.0, i= -0.3, d=0)
-        self.pid_2 = PID(p=0, i=0, d=0)
+        self.pid_1 = PID(p= -6, i= -0.1, d=0)
+        self.pid_2 = PID(p= -6, i= -0, d=0)
         self.my_msg = Twist2DStamped()
         self.allow_follow = False
-        self.velocity = 0.27  # adjust velocity here
+        self.velocity = 0.2  # adjust velocity here
 
         # receive the phi and d to update PID controller and movement
         rospy.Subscriber("lane_filter_node/lane_pose", LanePose, self.follow_lane)
@@ -27,7 +27,6 @@ class Lab3:
 
     # call PID class control calculation when receiving error message
     def follow_lane(self, pose):
-        rospy.logwarn(self.allow_follow)
 
         # if joystick key "a" is pressed, run lane follow
         if (self.allow_follow == True):
@@ -36,14 +35,13 @@ class Lab3:
             self.my_msg.v = self.velocity
 
             # use first PID controller on d
-            omega_1 = self.pid_1.calc_control(pose.d, 0.001)
+            omega_1 = self.pid_1.calc_control(pose.d, 0.002)
 
             # use second PID controller on phi
-            omega_2 = self.pid_2.calc_control(pose.phi, 0.001)
+            omega_2 = self.pid_2.calc_control(pose.phi, 0.002)
 
             # add up omega values
             self.my_msg.omega = omega_1 + omega_2
-            rospy.logwarn("Final Omega: %f", self.my_msg.omega)
 
             # sends new controller message to system 
             self.pub.publish(self.my_msg)
@@ -57,7 +55,6 @@ class Lab3:
     def callbackFSM(self, keypressed):
         if (keypressed.state == "LANE_FOLLOWING"):
             self.allow_follow = True # program will run once "a" is pressed
-            rospy.logwarn(self.allow_follow)
 
         elif (keypressed.state == "NORMAL_JOYSTICK_CONTROL"):
             self.allow_follow = False # disable lane following program
