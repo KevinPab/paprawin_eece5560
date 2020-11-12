@@ -1,0 +1,5 @@
+
+<launch>
+  <include file="$(find odometry_hw)/launch/odom_hw.launch"/>
+  <node pkg="homework7" name="homework7" type="homework7.py"/>
+</launch>
