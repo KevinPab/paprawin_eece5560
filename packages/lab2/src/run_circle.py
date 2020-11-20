@@ -21,10 +21,10 @@ if __name__ == '__main__':
     try:
         run_c = Run_Circle()
         rospy.init_node('run_circle_node', anonymous=True)
-        time_allowed = 10 # edit total running time here
+        time_allowed = 108 # edit total running time here
         for i in range(time_allowed):
-            run_c.send_motor_msg(0.34, 2.409) # edit velocity and omega values here
-            rospy.sleep(1.09)
+            run_c.send_motor_msg(0.30, 2.409) # edit velocity and omega values here
+            rospy.sleep(0.1)
         run_c.send_motor_msg(0, 0) # stops all motors
         rospy.sleep(1)
     except rospy.ROSInterruptException:

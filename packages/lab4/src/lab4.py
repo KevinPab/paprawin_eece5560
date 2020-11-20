@@ -19,21 +19,12 @@ ANGLE_FIX = 90.0/52.0
 
 class Lab4:
     def __init__(self):
-
-
-        # pose initially set to 0 
-
+        # records the calculated pose of the robot
         self.pose = Pose2DStamped()
-
-        # in this duckiebot no.33, calibration has made right velocity greater than left velocity
-        # constant = right_vel / left_vel during straight-forward driving (calculate to 17 decimal places using WolframAlpha.com)
 
         # subscribes to wheels_driver_node/wheels_cmd
         rospy.Subscriber("wheels_driver_node/wheels_cmd", WheelsCmdStamped, self.callback)
         self.pub = rospy.Publisher("lab4_results", Pose2DStamped, queue_size=10)
-        
-
-
 
     # receive values from rosbag given in this assignment and calculate odometry
     def callback(self, wheelsCmd):
@@ -51,17 +42,12 @@ class Lab4:
         d_x = d_s*math.cos(math.radians(self.pose.theta + (d_theta/2)))
         d_y = d_s*math.sin(math.radians(self.pose.theta + (d_theta/2)))
         
-        # logwarn for debugging
-        #rospy.logwarn("d_s=%f my_angle=%f inside_bracket=%f theta=%f sin = %f", d_s,self.theta,(self.theta + (d_theta/2)),d_theta,math.sin(math.radians(self.theta+(d_theta/2))))
-
-        # accumulate the values x,y,theta and apply constant to correct report the actual meters ran on the mat
+        # accumulate the values x,y
         self.pose.x += d_x
         self.pose.y += d_y
-        
+        # apply constant to fix the angle into desired angle
         self.pose.theta += d_theta * ANGLE_FIX
-
-        #rospy.logwarn("x: %f, y: %f, angle: %f", self.x, self.y, self.theta)
-
+        # publish the distance and theta
         self.pub.publish(self.pose)
 
 
