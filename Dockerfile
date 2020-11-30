@@ -1,7 +1,7 @@
 # parameters
-ARG REPO_NAME="paprawin_eece5560"
-ARG DESCRIPTION="Paprawin's class repo for UML EECE 5560"
-ARG MAINTAINER="Paprawin Boonyakida (paprawin_boonyakida@student.uml.edu)"
+ARG REPO_NAME="eece5560-base"
+ARG DESCRIPTION="Base class repo for UML EECE 5560"
+ARG MAINTAINER="Paul Robinette (paul_robinette@uml.edu)"
 # pick an icon from: https://fontawesome.com/v4.7.0/icons/
 ARG ICON="cube"
 
