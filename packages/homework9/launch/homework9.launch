@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="homework8" name="hw_8" type="crop_image.py"/>
+    <node pkg="homework9" name="hw_9" type="homework9.py"/>
+</launch>
