@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="homework8" name="crop_image" type="crop_image.py"/>
+</launch>
