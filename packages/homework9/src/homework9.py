@@ -75,13 +75,11 @@ class Homework9:
         and_white = cv2.bitwise_and(dilated_edges, dilated_white, mask=None)
         and_yellow = cv2.bitwise_and(dilated_edges, dilated_yellow, mask=None)
 
-        # apply Probabilistic Hough Transform on both white and yellow images
-        # using     -->   HoughLinesP(input  ,rho, np.pi/180, thres, None, minLen, maxGap)
-
-        # white lines work well with param (..,..,.., 5 , None, 10, 5)
+        # apply Probabilistic Hough Transform on both white and yellow images' lines
+        # white lines
         lines_white = cv2.HoughLinesP(and_white, 1, np.pi/180, 5, None, 10, 5)
 
-        # yellow lines work well with param (..,..,.., 2 , None, 5, 5)
+        # yellow lines
         lines_yellow = cv2.HoughLinesP(and_yellow, 1, np.pi/180, 5, None, 2, 2)
 
         # draw blue line on the two images using function provided in homework9 pdf
@@ -92,7 +90,7 @@ class Homework9:
         ros_white = self.bridge.cv2_to_imgmsg(image_lines_white, "bgr8")
         ros_yellow = self.bridge.cv2_to_imgmsg(image_lines_yellow, "bgr8")
 
-        # publish to 2 topics, white and yellow
+        # publish to 2 topics representing white and yellow filtered images
         self.pub_white.publish(ros_white)
         self.pub_yellow.publish(ros_yellow)
 
