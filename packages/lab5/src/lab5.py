@@ -119,15 +119,22 @@ class Lab5:
         # ros_yellow = self.bridge.cv2_to_imgmsg(image_lines_yellow, "bgr8")
 
         arr_cutoff = np.array([0, offset, 0, offset])
-        arr_ratio = np.array([1. / cv_cropped[1], 1. / cv_cropped[0], 1. / cv_cropped[1], 1. / cv_cropped[0]])
+        arr_ratio = np.array([1. / image_size[1], 1. / image_size[0], 1. / image_size[1], 1. / image_size[0]])
 
         rospy.logwarn(lines_white.shape)
         rospy.logwarn(arr_cutoff.shape)
         rospy.logwarn(arr_ratio.shape)
 
         #for i in range(len(lines_white)):
-        #line_normalized_white = (lines_white[i] + arr_cutoff) * arr_ratio
-        #line_normalized_yellow = (lines_yellow[i] + arr_cutoff) * arr_ratio
+        line_normalized_white = (lines_white + arr_cutoff) * arr_ratio
+        line_normalized_yellow = (lines_yellow + arr_cutoff) * arr_ratio
+
+        white_out = self.output_lines(cv_cropped, line_normalized_white)
+        yellow_out = self.output_lines(white_out, line_normalized_yellow)
+
+        ros_output = self.bridge.cv2_to_imgmsg(yellow_out, "bgr8")
+
+        self.pub_seglist.publish(ros_output)
 
         rospy.logwarn("calculation succeeded \n")
 
