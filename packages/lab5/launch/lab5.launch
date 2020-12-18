@@ -31,6 +31,7 @@
 </include>
 
 <group ns="$(env VEHICLE_NAME)">
+  <node pkg="lab3" name="lab3" type="lab3.py"/>
   <node pkg="lab5" name="lab5" type="lab5.py"/>
 </group>
 </launch>
