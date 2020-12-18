@@ -10,32 +10,30 @@ import numpy as np
 from duckietown_msgs.msg import SegmentList
 from duckietown_msgs.msg import Segment
 from sensor_msgs.msg import CompressedImage
-import itertools
-
-#Note: this node utilizes message_filers to synchronize multiple topics to be used in the same callback function
 
 #combines hw8 and hw9 class into a class name Lab5
 
 class Lab5:
     def __init__(self):
-        # Instatiate the converter class once by using a class member
+        # Instantiate the CvBridge
         self.bridge = CvBridge()
-        #subscribe to the image from duckiebot's camera
+
+        #subscribe to the compressed image from duckiebot's camera
         rospy.Subscriber("camera_node/image/compressed", CompressedImage, self.callback_lab5, queue_size=1, buff_size=2**24)
 
         # publishes to line_detector_node/segment_list
         # the type of message sent in SegmentList
         self.pub_seglist = rospy.Publisher("line_detector_node/segment_list", SegmentList, queue_size=10)
 
-        self.pub_white = rospy.Publisher("image_lines_white",Image, queue_size=10)
-        self.pub_yellow = rospy.Publisher("image_lines_yellow",Image, queue_size=10)
-        self.seg_msg = SegmentList()
-
+        # combined image of the white and yellow lanes
+        self.pub_combined_img = rospy.Publisher("image_lines_combined",Image, queue_size=10)
     
     def callback_lab5(self, msg):
+
         # convert to a ROS image using the bridge
         cv_img = self.bridge.compressed_imgmsg_to_cv2(msg, "bgr8")
 
+        # crop the image using the method provided in lab5 pdf
         image_size = (160, 120)
         offset = 40
         new_image = cv2.resize(cv_img, image_size, interpolation=cv2.INTER_NEAREST)
@@ -44,10 +42,10 @@ class Lab5:
         # convert colorspace from BGR to HSV
         hsv_img = cv2.cvtColor(cv_cropped, cv2.COLOR_BGR2HSV)
 
-        # filter white lane   (0,0,225),(180,40,255)
+        # filter white lane
         white_filter = cv2.inRange(hsv_img, (0,0,225), (180,40,255))
 
-        # filter yellow lane (0,150,180) (70,255,255)
+        # filter yellow lane
         yellow_filter = cv2.inRange(hsv_img, (25,80,120), (75,255,255))
 
         # convert the cropped image to gray 
@@ -81,32 +79,28 @@ class Lab5:
         # yellow lines
         lines_yellow = cv2.HoughLinesP(and_yellow, 1, np.pi/180, 5, None, 2, 2)
 
-
-
-
         # draw blue line on the two images using function provided in homework9 pdf
         image_lines_white = self.output_lines(cv_cropped, lines_white)
-        image_lines_yellow = self.output_lines(cv_cropped, lines_yellow)
+        # merge the white and yellow line images by sending image_lines_white as argument to output_lines
+        image_lines_combined = self.output_lines(image_lines_white, lines_yellow)
 
-        # convert images back to imgmsg to be published
-        ros_white = self.bridge.cv2_to_imgmsg(image_lines_white, "bgr8")
-        ros_yellow = self.bridge.cv2_to_imgmsg(image_lines_yellow, "bgr8")
+        # prepare imgmsg for the combined white/yellow lane detection
+        ros_combined_output = self.bridge.cv2_to_imgmsg(image_lines_combined, "bgr8")
 
-        # publish to 2 topics representing white and yellow filtered images
-        self.pub_white.publish(ros_white)
-        self.pub_yellow.publish(ros_yellow)
-
+        # publish the combined result of white/yellow lane detector image
+        self.pub_combined_img.publish(ros_combined_output)
 
 
-
-        # values for normalization provided in lab5 pdf
+        # values for normalization as provided in lab5 PDF
         arr_cutoff = np.array([0, offset, 0, offset])
         arr_ratio = np.array([1. / image_size[1], 1. / image_size[0], 1. / image_size[1], 1. / image_size[0]])
 
+        # stores the list of Segments and will be published to /segment_list
         resultList = SegmentList()
 
         #check to make sure white line is detected
         if (lines_white is not None):
+          # normalize the list of white lines
           line_normalized_white = (lines_white + arr_cutoff) * arr_ratio
           w_list = []
 
@@ -123,6 +117,7 @@ class Lab5:
             w_seg.pixels_normalized[1].x = line_normalized_white[i][0][2]
             w_seg.pixels_normalized[1].y = line_normalized_white[i][0][3]
 
+            # add the segment to list
             w_list.append(w_seg)
 
           # add the resulting list to the resulting List
@@ -130,6 +125,7 @@ class Lab5:
 
         #check to make sure yellow line is detected
         if(lines_yellow is not None):
+          # normalize the list of yellow lines
           line_normalized_yellow = (lines_yellow + arr_cutoff) * arr_ratio
           y_list = []
           #iterate through each yellow line
@@ -146,26 +142,13 @@ class Lab5:
             y_seg.pixels_normalized[1].y = line_normalized_yellow[i][0][3]
 
             # add this segment to the list of yellow segments
-            y_list.append(w_seg)
+            y_list.append(y_seg)
 
           # finally, add the list to the resulting List
           resultList.segments.extend(y_list)
 
-          #self.seg_msg.pixels_normalized[0].x = line_normalized_white
-
-          #ros_output = self.bridge.cv2_to_imgmsg(yellow_out, "bgr8")
-
-          # publish the resulting list of segments to a topic received by ground_detection_node
-          self.pub_seglist.publish(resultList)
-
-          #rospy.logwarn("calculation succeeded \n")
-
-        #create a SegmentList message to be published
-        #SegmentList my_seg_msg;
-
-
-        # publish the message to the topic that ground_projection_node receives
-        #self.pub_seglist(my_seg_msg)
+        # publish the resulting list of segments to a topic received by ground_detection_node
+        self.pub_seglist.publish(resultList)
 
     # function to draw blue lines (provided in homework9 instruction)
     def output_lines(self, original_image, lines):
