@@ -125,18 +125,18 @@ class Lab5:
         rospy.logwarn(arr_cutoff.shape)
         rospy.logwarn(arr_ratio.shape)
 
-        #for i in range(len(lines_white)):
-        line_normalized_white = (lines_white + arr_cutoff) * arr_ratio
-        line_normalized_yellow = (lines_yellow + arr_cutoff) * arr_ratio
+        if (lines_white is not None and lines_yellow is not None):
+          line_normalized_white = (lines_white + arr_cutoff) * arr_ratio
+          line_normalized_yellow = (lines_yellow + arr_cutoff) * arr_ratio
 
-        white_out = self.output_lines(cv_cropped, line_normalized_white)
-        yellow_out = self.output_lines(white_out, line_normalized_yellow)
+          white_out = self.output_lines(cv_cropped, line_normalized_white)
+          yellow_out = self.output_lines(white_out, line_normalized_yellow)
 
-        ros_output = self.bridge.cv2_to_imgmsg(yellow_out, "bgr8")
+          ros_output = self.bridge.cv2_to_imgmsg(yellow_out, "bgr8")
 
-        self.pub_seglist.publish(ros_output)
+          self.pub_seglist.publish(ros_output)
 
-        rospy.logwarn("calculation succeeded \n")
+          rospy.logwarn("calculation succeeded \n")
 
         #create a SegmentList message to be published
         #SegmentList my_seg_msg;
