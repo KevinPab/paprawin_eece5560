@@ -8,6 +8,7 @@ from cv_bridge import CvBridge
 import message_filters
 import numpy as np
 from duckietown_msgs.msg import SegmentList
+from duckietown_msgs.msg import Segment
 from sensor_msgs.msg import CompressedImage
 
 #Note: this node utilizes message_filers to synchronize multiple topics to be used in the same callback function
